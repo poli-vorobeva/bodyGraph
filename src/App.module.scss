@@ -1,7 +1,30 @@
-.test {
+/* .test {
   margin-left: 100 px;
   width: 150px;
   height: 100px;
+  padding: 5px;
   background: red;
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: visible;
 }
+
+.top {
+  text-align: center;
+}
+
+.bottom {
+  display: flex;
+  margin: 0 20px;
+  justify-content: space-between;
+  overflow: visible;
+}
+
+.bottomChild {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+ */

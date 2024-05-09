@@ -1,12 +1,22 @@
-import { useState } from "react";
 import styles from "./App.module.scss";
-console.log(styles);
+import { CanvasElement } from "./CanvasElement";
+
 function App() {
   // const [count, setCount] = useState(0);
 
   return (
     <>
-      <div className={styles.test}>vkflvkflv;k</div>
+      <div>
+        <CanvasElement />
+      </div>
+
+      {/*   <div className={styles.test}>
+        <div className={styles.top}>1</div>
+        <div className={styles.bottom}>
+          <div>2</div>
+          <div className={styles.bottomChild}>3</div>
+        </div>
+      </div> */}
     </>
   );
 }
