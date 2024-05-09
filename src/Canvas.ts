@@ -1,4 +1,7 @@
 import {
+  calcPointsOnEdge,
+  getCenterCoordinates,
+  getPointRotateCoord,
   getTriangleVertexesBySingle,
   rotateTriangleCoordinates,
 } from "./mathFunctions";
@@ -18,11 +21,20 @@ function gateText(
 
 function drawTriangle(
   ctx: CanvasRenderingContext2D,
+  gates: number[],
   sX: number,
   sY: number,
   rotateAngle: number,
 ) {
-  const [[p1x, p1y], [p2x, p2y]] = getTriangleVertexesBySingle(60, 60, sX, sY);
+  const [[p1x, p1y], [p2x, p2y]] = getTriangleVertexesBySingle(
+    30,
+    90,
+    sX,
+    sY,
+    1,
+  );
+  const center = getCenterCoordinates(sX, p1x, p2x, sY, p1y, p2y);
+
   const [firstPoint, secondPoint, thirdPoint] = rotateTriangleCoordinates(
     sX,
     p1x,
@@ -30,8 +42,10 @@ function drawTriangle(
     sY,
     p1y,
     p2y,
-    rotateAngle,
+    85,
+    center,
   );
+  console.log("out", sX, sY, p1x, p1y, p2x, p2y);
   ctx.beginPath();
   ctx.moveTo(firstPoint.x, firstPoint.y);
   ctx.lineTo(secondPoint.x, secondPoint.y);
@@ -39,23 +53,136 @@ function drawTriangle(
   ctx.fillStyle = "black";
   ctx.fill();
   ctx.closePath();
+
+  const [[ip1x, ip1y], [ip2x, ip2y]] = getTriangleVertexesBySingle(
+    30,
+    90,
+    sX,
+    sY + 30,
+    0.6,
+  );
+  console.log("insede", sX, sY + 30, ip1x, ip1y, ip2x, ip2y);
+  const [firstIPoint, secondIPoint, thirdIPoint] = rotateTriangleCoordinates(
+    sX,
+    ip1x,
+    ip2x,
+    sY + 30,
+    ip1y,
+    ip2y,
+    85,
+    center,
+  );
+  ctx.beginPath();
+  ctx.moveTo(firstIPoint.x, firstIPoint.y);
+  ctx.lineTo(secondIPoint.x, secondIPoint.y);
+  ctx.lineTo(thirdIPoint.x, thirdIPoint.y);
+  //ctx.fillStyle = "yellow";
+  ctx.fill();
+  ctx.closePath();
+
+  const getesPerEdge = gates.length / 3;
+  const firstEdgeGates = gates.slice(0, getesPerEdge);
+  const firstEdgeBreakPoints = calcPointsOnEdge(
+    firstIPoint.x,
+    secondIPoint.x,
+    firstIPoint.y,
+    secondIPoint.y,
+    getesPerEdge,
+  );
+
+  firstEdgeGates.forEach((g, index) => {
+    console.log("firstg", g);
+    ctx.beginPath();
+    ctx.fillStyle = "white";
+    //сдвигаем тектс вовнутрь
+    const pointWithRotate = getPointRotateCoord(
+      firstEdgeBreakPoints[index][0],
+      firstEdgeBreakPoints[index][1],
+      rotateAngle,
+      center[0],
+      center[1],
+    );
+    ctx.fillText(g, pointWithRotate.x, pointWithRotate.y);
+  });
+
+  const secondEdgeGates = gates.slice(getesPerEdge, getesPerEdge * 2);
+  const secondEdgeBreakPoints = calcPointsOnEdge(
+    secondIPoint.x,
+    thirdIPoint.x,
+    secondIPoint.y,
+    thirdIPoint.y,
+    getesPerEdge,
+  );
+
+  secondEdgeGates.forEach((g, index) => {
+    ctx.beginPath();
+    ctx.fillStyle = "white";
+    //сдвигаем тектс вовнутрь
+    const pointWithRotate = getPointRotateCoord(
+      secondEdgeBreakPoints[index][0],
+      secondEdgeBreakPoints[index][1],
+      rotateAngle,
+      center[0],
+      center[1],
+    );
+    ctx.fillText(g, pointWithRotate.x, pointWithRotate.y);
+  });
+
+  const thirdEdgeGates = gates.slice(getesPerEdge * 2, getesPerEdge * 3);
+  const thirdEdgeBreakPoints = calcPointsOnEdge(
+    thirdIPoint.x,
+    firstIPoint.x,
+    thirdIPoint.y,
+    firstIPoint.y,
+    getesPerEdge,
+  );
+  thirdEdgeGates.forEach((g, index) => {
+    ctx.beginPath();
+    ctx.fillStyle = "white";
+    //сдвигаем тектс вовнутрь
+    const pointWithRotate = getPointRotateCoord(
+      thirdEdgeBreakPoints[index][0],
+      thirdEdgeBreakPoints[index][1],
+      rotateAngle,
+      center[0],
+      center[1],
+    );
+    ctx.fillText(g, pointWithRotate.x, pointWithRotate.y);
+  });
+
+  console.log(firstEdgeGates, "f");
 }
 
 function defineGateTextCoordinates(gates: string[]) {}
 enum SHAPES {
-  TRIUNGLE = "triangle",
+  TRIANGLE = "triangle",
 }
-const drawData = (middleX: number) => ({
-  Head: {
-    shape: SHAPES.TRIUNGLE,
-    gates: [1, 2, 3],
-    coordinates: [],
-  },
-  Foot: {
-    shape: SHAPES.TRIUNGLE,
-    gates: [9, 8, 7],
-  },
-});
+type tDrawDataItem = {
+  title: string;
+  shape: SHAPES;
+  gates: number[];
+  rotateAngle: number;
+  startCoordinates: number[];
+};
+
+const drawData = (width: number, height: number): tDrawDataItem[] => {
+  return [
+    {
+      title: "Head",
+      shape: SHAPES.TRIANGLE,
+      gates: [1, 2, "", "", 5, 6],
+      rotateAngle: 0,
+      startCoordinates: [Math.floor(width / 2), 0],
+    },
+    /*   {
+      title: "Foot",
+      shape: SHAPES.TRIANGLE,
+      gates: [0, 0, 0, 0, 0, 0, 9, 8, 7],
+      rotateAngle: 180,
+      startCoordinates: [Math.floor(width / 2), Math.floor(height / 2)],
+    }, */
+  ];
+};
 
 export class Canvas {
   private ctx: CanvasRenderingContext2D;
@@ -69,20 +196,26 @@ export class Canvas {
     this.ctx = parent.getContext("2d");
     this.timer = 0;
   }
-  headTriangle() {
-    const startX = this.width / 2;
-    const startY = 0;
-    drawTriangle(this.ctx, startX, startY, 0);
-  }
+  /* 
   footTriangle() {
     const startX = this.width / 2;
     const startY = Math.floor(this.height / 2);
     drawTriangle(this.ctx, startX, startY, 180);
-  }
+  } */
   public draw() {
     this.ctx.clearRect(0, 0, this.width, this.height);
-    this.headTriangle();
-    this.footTriangle();
+    // this.headTriangle();
+    //this.footTriangle();
+
+    drawData(this.width, this.height).forEach((element) => {
+      drawTriangle(
+        this.ctx,
+        element.gates,
+        element.startCoordinates[0],
+        element.startCoordinates[1],
+        element.rotateAngle,
+      );
+    });
   }
 }
 //const angle = (45 * Math.PI) / 180;

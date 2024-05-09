@@ -6,8 +6,8 @@ export function rotateTriangleCoordinates(
   p2y: number,
   p3y: number,
   angle: number,
+  center: number[],
 ) {
-  const center = getCenterCoordinates(p1x, p2x, p3x, p1y, p2y, p3y);
   const newwCoords1 = getPointRotateCoord(
     p1x,
     p1y,
@@ -74,9 +74,12 @@ export function getTriangleVertexesBySingle(
   angle2: number,
   x: number,
   y: number,
+  scaleKoef: number,
 ) {
   // Вычислить длину стороны a
-  const a = 100 / Math.sin((angle1 * Math.PI) / 180);
+  const a =
+    (100 / Math.sin((angle1 * Math.PI) / 180)) *
+    (scaleKoef !== 1 ? scaleKoef : 1);
 
   // Вычислить координаты второй вершины
   const x2 = x + a * Math.cos((angle1 * Math.PI) / 180);
@@ -96,7 +99,40 @@ export function getTriangleVertexesBySingle(
   const x3 = x + vx3;
   const y3 = y + vy3;
   return [
-    [x2, y2],
-    [x3, y3],
+    [Math.floor(x2), Math.floor(y2)],
+    [Math.floor(x3), Math.floor(y3)],
   ];
 }
+//Высчитываем позиции цифр для границы изначальные (до вращения фигуры)
+export function calcPointsOnEdge(
+  x1: number,
+  x2: number,
+  y1: number,
+  y2: number,
+  sliceCount: number,
+) {
+  console.log("$$$$$$XXX", x1, x2);
+  console.log("$$$$YYYYYY", y1, y2);
+  const result = [];
+  console.log("~~~~~xxx", x1, x2);
+  const dx = -(x1 - x2) / sliceCount;
+  const dy = -(y1 - y2) / sliceCount;
+  console.log("Dy,dx", dy, dx);
+  for (let i = 1; i <= sliceCount; i++) {
+    console.log("X1", x1);
+    console.log("y1", y1);
+    const x = Math.floor(x1 + i * dx);
+    const y = Math.floor(y1 + i * dy);
+    console.log("newX", x);
+    console.log("newy", y);
+
+    result.push([Math.floor(x), Math.floor(y)]);
+  }
+  console.log(result);
+  return result;
+}
+
+export const moveByX = (x1: number, x2: number, divide: number) => {
+  const dx = (x2 - x1) / divide;
+  return Math.floor(dx);
+};
