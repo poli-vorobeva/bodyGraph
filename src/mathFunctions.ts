@@ -1,3 +1,6 @@
+export const TRIANGLE_EDGE_LENGHT = 100;
+export const RECTANGLE_EDGE_LENGHT = 80;
+
 export function rotateTriangleCoordinates(
   p1x: number,
   p2x: number,
@@ -33,8 +36,8 @@ export function getPointRotateCoord(x: number, y: number, angle: number, centerX
 
 export function getTriangleVertexesBySingle(angle1: number, angle2: number, x: number, y: number, scaleKoef: number) {
   // Вычислить длину стороны a
-  const a = (100 / Math.sin((angle1 * Math.PI) / 180)) * (scaleKoef !== 1 ? scaleKoef : 1);
-
+  //const a = (100 / Math.sin((angle1 * Math.PI) / 180)) * (scaleKoef !== 1 ? scaleKoef : 1);
+  const a = TRIANGLE_EDGE_LENGHT * (scaleKoef !== 1 ? scaleKoef : 1);
   // Вычислить координаты второй вершины
   const x2 = x + a * Math.cos((angle1 * Math.PI) / 180);
   const y2 = y + a * Math.sin((angle1 * Math.PI) / 180);

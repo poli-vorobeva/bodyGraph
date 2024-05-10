@@ -1,17 +1,18 @@
-import { drawTriangleComponent } from "./Triangle";
-import { sliceGatedByEdges } from "./functions";
-import { calcPointsOnEdgeRect, getPointRotateCoord } from "./mathFunctions";
+import { defineShapeFunction, drawGateText, getDataForDraw } from "./functions";
+import { RECTANGLE_EDGE_LENGHT, TRIANGLE_EDGE_LENGHT } from "./mathFunctions";
 
-enum SHAPES {
+export enum SHAPES {
   TRIANGLE = "triangle",
   RECTANGLE = "rectangle",
 }
-type tDrawDataItem = {
+export type tDrawDataItem = {
   title: string;
   shape: SHAPES;
-  gates: number[];
+  gates: (string | number)[];
   rotateAngle: number;
   startCoordinates: number[];
+  edgeWidth: number;
+  extraAngles?: [number, number];
 };
 
 const drawData = (width: number, height: number): tDrawDataItem[] => {
@@ -19,93 +20,95 @@ const drawData = (width: number, height: number): tDrawDataItem[] => {
     {
       title: "Head",
       shape: SHAPES.TRIANGLE,
-      gates: [1, 2, 3, 4, 5, 6],
+      gates: ["", "", 63, 61, 64, ""],
       rotateAngle: 0,
       startCoordinates: [Math.floor(width / 2), 0],
+      edgeWidth: TRIANGLE_EDGE_LENGHT,
     },
     {
-      title: "Midgle9",
+      title: "Ajna",
+      shape: SHAPES.TRIANGLE,
+      gates: [43, 17, 47, 24, 4, 11],
+      rotateAngle: 180,
+      startCoordinates: [Math.floor(width / 2), 70],
+      edgeWidth: TRIANGLE_EDGE_LENGHT,
+    },
+    {
+      title: "Throat",
       shape: SHAPES.RECTANGLE,
-      gates: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-      rotateAngle: 900,
-      startCoordinates: [Math.floor(width / 2) / 2, Math.floor(height / 2) / 2],
+      gates: [62, 23, 56, 35, 12, 45, 33, 8, 31, 20, "", 16],
+      rotateAngle: 0,
+      get startCoordinates() {
+        return [Math.floor(width / 2 - this.edgeWidth / 2), 200];
+      },
+      edgeWidth: RECTANGLE_EDGE_LENGHT,
+    },
+
+    {
+      title: "G",
+      shape: SHAPES.RECTANGLE,
+      gates: [1, 13, 25, 46, 2, 15, 10, 7],
+      rotateAngle: 45,
+      get startCoordinates() {
+        return [Math.floor(width / 2 - this.edgeWidth / 2), 320];
+      },
+      edgeWidth: RECTANGLE_EDGE_LENGHT,
+    },
+
+    {
+      title: "Sacral",
+      shape: SHAPES.RECTANGLE,
+      gates: [5, 14, 29, "", "", 59, 9, 3, 42, 27, "", 34],
+      rotateAngle: 0,
+      get startCoordinates() {
+        return [Math.floor(width / 2 - this.edgeWidth / 2), 450];
+      },
+      edgeWidth: RECTANGLE_EDGE_LENGHT,
+    },
+    {
+      title: "Root",
+      shape: SHAPES.RECTANGLE,
+      gates: [53, 60, 52, 19, 39, 41, "", "", "", 58, 38, 54],
+      rotateAngle: 0,
+      get startCoordinates() {
+        return [Math.floor(width / 2 - this.edgeWidth / 2), 580];
+      },
+      edgeWidth: RECTANGLE_EDGE_LENGHT,
+    },
+    {
+      title: "Spleen",
+      shape: SHAPES.TRIANGLE,
+      gates: [50, 32, 28, 18, "", "", 48, 57, 44],
+      rotateAngle: 90,
+      get startCoordinates() {
+        return [this.edgeWidth / 2, 430];
+      },
+      edgeWidth: RECTANGLE_EDGE_LENGHT,
+    },
+    {
+      title: "Solar",
+      shape: SHAPES.TRIANGLE,
+      gates: [6, 37, 22, 36, "", "", 30, 55, 49],
+      rotateAngle: 270,
+      get startCoordinates() {
+        return [width - this.edgeWidth / 2, 430];
+      },
+      edgeWidth: RECTANGLE_EDGE_LENGHT,
+    },
+    {
+      title: "Heart",
+      shape: SHAPES.TRIANGLE,
+      gates: [26, 51, 21, "", 40, ""],
+      rotateAngle: 110,
+      get startCoordinates() {
+        return [width / 2 + 1.5 * this.edgeWidth, 360];
+      },
+      edgeWidth: RECTANGLE_EDGE_LENGHT,
+      extraAngles: [80, 50],
     },
   ];
 };
-const getRectPoints = (x: number, y: number, edgeLenght: number, rotateAngle: number) => {
-  const startPoints = [
-    [x, y],
-    [x + edgeLenght, y],
-    [x + edgeLenght, y + edgeLenght],
-    [x, y + edgeLenght],
-  ];
-  const center = getRectCenterCoords(startPoints);
-  return startPoints.map((point) => {
-    return getPointRotateCoord(point[0], point[1], rotateAngle, center[0], center[1]);
-  });
-};
 
-const drawRectOnCanvas = (ctx: CanvasRenderingContext2D, color: string, points: { x: number; y: number }[]) => {
-  const [p1, p2, p3, p4] = points;
-  ctx.beginPath();
-  ctx.fillStyle = color;
-  ctx.moveTo(p1.x, p1.y);
-  ctx.lineTo(p2.x, p2.y);
-  ctx.lineTo(p3.x, p3.y);
-  ctx.lineTo(p4.x, p4.y);
-  ctx.fill();
-  ctx.closePath();
-};
-const getRectCenterCoords = (points: number[][]) => {
-  return points
-    .reduce(
-      (acc, point) => {
-        point.forEach((coord, index) => {
-          acc[index] += coord;
-        });
-        return acc;
-      },
-      [0, 0],
-    )
-    .map((sumCoord) => sumCoord / 4);
-};
-const drawRectungleComponent = (
-  ctx: CanvasRenderingContext2D,
-  gates: number[],
-  sX: number,
-  sY: number,
-  rotateAngle: number,
-) => {
-  const edgeLenght = 100;
-  const points = getRectPoints(sX, sY, edgeLenght, rotateAngle);
-  const innerOffset = 10;
-  const iPoints = getRectPoints(sX + innerOffset, sY + innerOffset, edgeLenght - innerOffset * 2, rotateAngle);
-  drawRectOnCanvas(ctx, "black", points);
-
-  drawRectOnCanvas(ctx, "unset", iPoints);
-
-  const drawEdges = (gates: number[], innerPoints: { x: number; y: number }[]) => {
-    /////////////////////////////////////////////////
-    const elsInSlice = Math.ceil(gates.length / 4);
-    const slicedGates = sliceGatedByEdges(gates, elsInSlice);
-    for (let i = 0; i < slicedGates.length; i++) {
-      const secontPointIndex = i + 1 <= slicedGates.length - 1 ? i + 1 : 0;
-      const edgeBreakPoints = calcPointsOnEdgeRect(
-        innerPoints[i].x,
-        innerPoints[secontPointIndex].x,
-        innerPoints[i].y,
-        innerPoints[secontPointIndex].y,
-        slicedGates[i].length,
-      );
-      slicedGates[i].forEach((g, index) => {
-        ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillText(`${g}`, edgeBreakPoints[index][0], edgeBreakPoints[index][1]);
-      });
-    }
-  };
-  drawEdges(gates, iPoints);
-};
 export class Canvas {
   private ctx: CanvasRenderingContext2D;
   private width: number;
@@ -115,30 +118,22 @@ export class Canvas {
   constructor(parent: HTMLCanvasElement) {
     this.width = parent.width;
     this.height = parent.height;
-    this.ctx = parent.getContext("2d");
+    this.ctx = parent.getContext("2d") as CanvasRenderingContext2D;
     this.timer = 0;
   }
 
   public draw() {
     this.ctx.clearRect(0, 0, this.width, this.height);
-    drawData(this.width, this.height).forEach((element) => {
-      if (element.shape === SHAPES.TRIANGLE) {
-        drawTriangleComponent(
-          this.ctx,
-          element.gates,
-          element.startCoordinates[0],
-          element.startCoordinates[1],
-          element.rotateAngle,
-        );
-      } else {
-        drawRectungleComponent(
-          this.ctx,
-          element.gates,
-          element.startCoordinates[0],
-          element.startCoordinates[1],
-          element.rotateAngle,
-        );
-      }
+    const dataToDraw = drawData(this.width, this.height).map((element) => {
+      return getDataForDraw(element);
+    });
+    dataToDraw.forEach((item) => {
+      const drawShapeFunction = defineShapeFunction(item.shape);
+      drawShapeFunction(this.ctx, "black", item.shapePoints);
+      item.gates.forEach((gate) => {
+        console.log(gate);
+        drawGateText(this.ctx, gate.name, gate.points[0], gate.points[1]);
+      });
     });
   }
 }
