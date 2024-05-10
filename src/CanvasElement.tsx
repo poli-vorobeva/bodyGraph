@@ -9,7 +9,7 @@ export const CanvasElement = () => {
       canvasRef!.current.width = 600;
       canvasRef!.current.height = 700;
       const canvas = new Canvas(canvasRef!.current);
-      canvas.draw();
+      canvas.init();
     }
   }, []);
 

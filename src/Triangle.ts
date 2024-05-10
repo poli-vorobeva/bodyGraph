@@ -52,7 +52,7 @@ export const drawTriangleComponent = (
       slicedGates[i].forEach((g, index) => {
         // ctx.beginPath();
         // ctx.fillStyle = "white";
-        gatesPoints.push({ name: `${g}`, points: edgeBreakPoints[index] });
+        gatesPoints.push({ name: g, points: edgeBreakPoints[index] });
         // ctx.fillText(`${g}`, edgeBreakPoints[index][0], edgeBreakPoints[index][1]);
       });
     }

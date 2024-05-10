@@ -47,8 +47,11 @@ export const drawRectOnCanvas = (ctx: CanvasRenderingContext2D, color: string, p
   ctx.closePath();
 };
 
-export const defineShapeFunction = (shape: SHAPES) => {
+export const defineDrawShapeFunction = (shape: SHAPES) => {
   return shape === SHAPES.TRIANGLE ? drawTriangleOnCanvas : drawRectOnCanvas;
+};
+const defineDataFunction = (shape: SHAPES) => {
+  return shape === SHAPES.TRIANGLE ? drawTriangleComponent : drawRectungleComponent;
 };
 
 //Get Coordinates Function
@@ -60,7 +63,7 @@ export type tDataForDraw = {
 };
 
 export const getDataForDraw = (element: tDrawDataItem): tDataForDraw => {
-  const currentFunction = element.shape === SHAPES.TRIANGLE ? drawTriangleComponent : drawRectungleComponent;
+  const currentFunction = defineDataFunction(element.shape);
 
   const { gates, shapePoints } = currentFunction(
     element.gates,

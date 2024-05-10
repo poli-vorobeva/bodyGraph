@@ -1,4 +1,11 @@
-import { defineShapeFunction, drawGateText, getDataForDraw } from "./functions";
+import {
+  defineDrawShapeFunction,
+  defineShapeFunction,
+  drawGateText,
+  getDataForDraw,
+  tDataForDraw,
+  tGatePoints,
+} from "./functions";
 import { RECTANGLE_EDGE_LENGHT, TRIANGLE_EDGE_LENGHT } from "./mathFunctions";
 
 export enum SHAPES {
@@ -47,7 +54,7 @@ const drawData = (width: number, height: number): tDrawDataItem[] => {
     {
       title: "G",
       shape: SHAPES.RECTANGLE,
-      gates: [1, 13, 25, 46, 2, 15, 10, 7],
+      gates: [13, 25, 46, 2, 15, 10, 7, 1],
       rotateAngle: 45,
       get startCoordinates() {
         return [Math.floor(width / 2 - this.edgeWidth / 2), 320];
@@ -98,7 +105,7 @@ const drawData = (width: number, height: number): tDrawDataItem[] => {
     {
       title: "Heart",
       shape: SHAPES.TRIANGLE,
-      gates: [26, 51, 21, "", 40, ""],
+      gates: [40, "", 26, 51, 21, ""],
       rotateAngle: 110,
       get startCoordinates() {
         return [width / 2 + 1.5 * this.edgeWidth, 360];
@@ -108,30 +115,107 @@ const drawData = (width: number, height: number): tDrawDataItem[] => {
     },
   ];
 };
-
+const getesRelations = [
+  [64, 47],
+  [61, 24],
+  [63, 4],
+  [17, 62],
+  [43, 23],
+  [11, 56],
+  [16, 48],
+  [20, 57],
+  [31, 7],
+  [8, 1],
+  [33, 13],
+  [45, 21],
+  [12, 22],
+  [35, 36],
+  [25, 51],
+  [15, 5],
+  [40, 37],
+  [2, 14],
+  [46, 29],
+  [44, 26],
+  [50, 27],
+  [59, 6],
+  [32, 54],
+  [28, 38],
+  [18, 58],
+  [19, 49],
+  [39, 55],
+  [41, 30],
+];
 export class Canvas {
   private ctx: CanvasRenderingContext2D;
   private width: number;
   private height: number;
   timer: number;
+  gatesCoordinates: Map<number, number[]>;
+  gateRelations: Map<number, number>;
 
   constructor(parent: HTMLCanvasElement) {
     this.width = parent.width;
     this.height = parent.height;
     this.ctx = parent.getContext("2d") as CanvasRenderingContext2D;
     this.timer = 0;
+    this.gatesCoordinates = new Map();
+    this.gateRelations = new Map();
   }
+  private drawPaths() {
+    console.log("***");
+    this.ctx.beginPath(); // Start a new path
+    this.ctx.moveTo(30, 50); // Move the pen to (30, 50)
+    this.ctx.lineTo(150, 100); // Draw a line to (150, 100)
+    this.ctx.stroke(); // Render the path
 
-  public draw() {
-    this.ctx.clearRect(0, 0, this.width, this.height);
+    getesRelations.forEach(([g1, g2]) => {
+      const fg = this.gatesCoordinates.get(g1);
+      const fs = this.gatesCoordinates.get(g2);
+      if (fg && fs) {
+        /*  this.ctx.beginPath(); // Start a new path
+        this.ctx.moveTo(30, 50); // Move the pen to (30, 50)
+        this.ctx.lineTo(150, 100); // Draw a line to (150, 100)
+        this.ctx.stroke(); // Render the path */
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(+fg[0], +fg[1]);
+        this.ctx.lineTo(+fs[0], +fs[1]);
+        this.ctx.strokeStyle = "red";
+        this.ctx.stroke();
+        this.ctx.closePath();
+      }
+    });
+  }
+  public init() {
     const dataToDraw = drawData(this.width, this.height).map((element) => {
       return getDataForDraw(element);
     });
+    this.getGatesRelations();
+    this.addGatesCoordinates(dataToDraw);
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.drawPaths();
+    this.drawBase(dataToDraw);
+  }
+  private getGatesRelations() {
+    getesRelations.forEach(([g1, g2]) => {
+      this.gateRelations.set(g1, g2);
+      this.gateRelations.set(g2, g1);
+    });
+  }
+  private addGatesCoordinates(dataToDraw: tDataForDraw[]) {
+    dataToDraw.forEach((center) => {
+      center.gates.forEach((gate) => {
+        if (gate.name) {
+          this.gatesCoordinates.set(+gate.name, gate.points);
+        }
+      });
+    });
+  }
+  private drawBase(dataToDraw: tDataForDraw[]) {
     dataToDraw.forEach((item) => {
-      const drawShapeFunction = defineShapeFunction(item.shape);
+      const drawShapeFunction = defineDrawShapeFunction(item.shape);
       drawShapeFunction(this.ctx, "black", item.shapePoints);
       item.gates.forEach((gate) => {
-        console.log(gate);
         drawGateText(this.ctx, gate.name, gate.points[0], gate.points[1]);
       });
     });
