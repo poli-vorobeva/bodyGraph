@@ -30,21 +30,6 @@ const drawData = (width: number, height: number): tDrawDataItem[] => {
       rotateAngle: 900,
       startCoordinates: [Math.floor(width / 2) / 2, Math.floor(height / 2) / 2],
     },
-
-    {
-      title: "Midgle12",
-      shape: SHAPES.RECTANGLE,
-      gates: [34, 5, 66, 87, 2, 5, 9, 8, 7, 10, 11, 12],
-      rotateAngle: 10,
-      startCoordinates: [Math.floor(width / 2) / 2, Math.floor(height / 2)],
-    },
-    {
-      title: "Foot",
-      shape: SHAPES.TRIANGLE,
-      gates: [34, 5, 66, 87, 2, 5, 9, 8, 7],
-      rotateAngle: 300,
-      startCoordinates: [Math.floor(width / 2), Math.floor(height / 2)],
-    },
   ];
 };
 const getRectPoints = (x: number, y: number, edgeLenght: number, rotateAngle: number) => {
