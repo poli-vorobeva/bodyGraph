@@ -8,78 +8,32 @@ export function rotateTriangleCoordinates(
   angle: number,
   center: number[],
 ) {
-  const newwCoords1 = getPointRotateCoord(
-    p1x,
-    p1y,
-    angle,
-    center[0],
-    center[1],
-  );
-  const newwCoords2 = getPointRotateCoord(
-    p2x,
-    p2y,
-    angle,
-    center[0],
-    center[1],
-  );
-  const newwCoords3 = getPointRotateCoord(
-    p3x,
-    p3y,
-    angle,
-    center[0],
-    center[1],
-  );
+  const newwCoords1 = getPointRotateCoord(p1x, p1y, angle, center[0], center[1]);
+  const newwCoords2 = getPointRotateCoord(p2x, p2y, angle, center[0], center[1]);
+  const newwCoords3 = getPointRotateCoord(p3x, p3y, angle, center[0], center[1]);
   return [newwCoords1, newwCoords2, newwCoords3];
 }
 
-export function getCenterCoordinates(
-  x1: number,
-  x2: number,
-  x3: number,
-  y1: number,
-  y2: number,
-  y3: number,
-) {
+export function getCenterCoordinates(x1: number, x2: number, x3: number, y1: number, y2: number, y3: number) {
   const centerX = (x1 + x2 + x3) / 3;
   const centerY = (y1 + y2 + y3) / 3;
   return [centerX, centerY];
 }
 
-export function getPointRotateCoord(
-  x: number,
-  y: number,
-  angle: number,
-  centerX: number,
-  centerY: number,
-) {
+export function getPointRotateCoord(x: number, y: number, angle: number, centerX: number, centerY: number) {
   // Преобразовать угол в радианы
   const radians = (angle * Math.PI) / 180;
-
   // Рассчитать новые координаты
-  const xPrime =
-    (x - centerX) * Math.cos(radians) -
-    (y - centerY) * Math.sin(radians) +
-    centerX;
-  const yPrime =
-    (x - centerX) * Math.sin(radians) +
-    (y - centerY) * Math.cos(radians) +
-    centerY;
+  const xPrime = (x - centerX) * Math.cos(radians) - (y - centerY) * Math.sin(radians) + centerX;
+  const yPrime = (x - centerX) * Math.sin(radians) + (y - centerY) * Math.cos(radians) + centerY;
 
   // Вернуть новые координаты
-  return { x: xPrime, y: yPrime };
+  return { x: Math.floor(xPrime), y: Math.floor(yPrime) };
 }
 
-export function getTriangleVertexesBySingle(
-  angle1: number,
-  angle2: number,
-  x: number,
-  y: number,
-  scaleKoef: number,
-) {
+export function getTriangleVertexesBySingle(angle1: number, angle2: number, x: number, y: number, scaleKoef: number) {
   // Вычислить длину стороны a
-  const a =
-    (100 / Math.sin((angle1 * Math.PI) / 180)) *
-    (scaleKoef !== 1 ? scaleKoef : 1);
+  const a = (100 / Math.sin((angle1 * Math.PI) / 180)) * (scaleKoef !== 1 ? scaleKoef : 1);
 
   // Вычислить координаты второй вершины
   const x2 = x + a * Math.cos((angle1 * Math.PI) / 180);
@@ -89,12 +43,8 @@ export function getTriangleVertexesBySingle(
   const vx = x2 - x;
   const vy = y2 - y;
 
-  const vx3 =
-    vx * Math.cos((angle2 * Math.PI) / 180) -
-    vy * Math.sin((angle2 * Math.PI) / 180);
-  const vy3 =
-    vx * Math.sin((angle2 * Math.PI) / 180) +
-    vy * Math.cos((angle2 * Math.PI) / 180);
+  const vx3 = vx * Math.cos((angle2 * Math.PI) / 180) - vy * Math.sin((angle2 * Math.PI) / 180);
+  const vy3 = vx * Math.sin((angle2 * Math.PI) / 180) + vy * Math.cos((angle2 * Math.PI) / 180);
 
   const x3 = x + vx3;
   const y3 = y + vy3;
@@ -103,32 +53,31 @@ export function getTriangleVertexesBySingle(
     [Math.floor(x3), Math.floor(y3)],
   ];
 }
-//Высчитываем позиции цифр для границы изначальные (до вращения фигуры)
-export function calcPointsOnEdge(
-  x1: number,
-  x2: number,
-  y1: number,
-  y2: number,
-  sliceCount: number,
-) {
-  console.log("$$$$$$XXX", x1, x2);
-  console.log("$$$$YYYYYY", y1, y2);
+
+//Высчитываем позиции цифр квадрата
+export function calcPointsOnEdgeRect(x1: number, x2: number, y1: number, y2: number, sliceCount: number) {
   const result = [];
-  console.log("~~~~~xxx", x1, x2);
-  const dx = -(x1 - x2) / sliceCount;
-  const dy = -(y1 - y2) / sliceCount;
-  console.log("Dy,dx", dy, dx);
+  const dx = x1 !== x2 ? -(x1 - x2) / sliceCount : 0;
+  const dy = y1 !== y2 ? -(y1 - y2) / sliceCount : 0;
+  //console.log("-----dx dy", dx, dy);
+  // console.log(x1, x2, "x--y", y1, y2);
   for (let i = 1; i <= sliceCount; i++) {
-    console.log("X1", x1);
-    console.log("y1", y1);
     const x = Math.floor(x1 + i * dx);
     const y = Math.floor(y1 + i * dy);
-    console.log("newX", x);
-    console.log("newy", y);
-
     result.push([Math.floor(x), Math.floor(y)]);
   }
-  console.log(result);
+  return result;
+}
+//Высчитываем позиции цифр треугольника
+export function calcPointsOnEdge(x1: number, x2: number, y1: number, y2: number, sliceCount: number) {
+  const result = [];
+  const dx = -(x1 - x2) / sliceCount;
+  const dy = -(y1 - y2) / sliceCount;
+  for (let i = 0; i < sliceCount; i++) {
+    const x = Math.floor(x1 + i * dx);
+    const y = Math.floor(y1 + i * dy);
+    result.push([Math.floor(x), Math.floor(y)]);
+  }
   return result;
 }
 
