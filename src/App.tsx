@@ -1,10 +1,11 @@
-import styles from "./App.module.scss";
+import { Button } from "./Button";
 import { CanvasElement } from "./CanvasElement";
 
 function App() {
   return (
     <>
       <div>
+        <Button />
         <CanvasElement />
       </div>
     </>

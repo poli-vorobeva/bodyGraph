@@ -1,17 +1,6 @@
-import { SHAPES, tDrawDataItem } from "./Canvas";
+import { CENTER_NAME, SHAPES, tDrawDataItem } from "./constants";
 import { RECTANGLE_EDGE_LENGHT, TRIANGLE_EDGE_LENGHT } from "./mathFunctions";
 
-export const enum CENTER_NAME {
-  HEAD = "Head",
-  AJNA = "Ajna",
-  THROAT = "Throat",
-  G = "G",
-  SACRAL = "Sacral",
-  ROOT = "Root",
-  SPLEEN = "Spleen",
-  SOLAR = "Solar",
-  HEART = "Heart",
-}
 export const drawData = (width: number): tDrawDataItem[] => {
   return [
     {
@@ -104,34 +93,3 @@ export const drawData = (width: number): tDrawDataItem[] => {
     },
   ];
 };
-
-export const getesRelations = [
-  [64, 47],
-  [61, 24],
-  [63, 4],
-  [17, 62],
-  [43, 23],
-  [11, 56],
-  [16, 48],
-  [20, 57],
-  [31, 7],
-  [8, 1],
-  [33, 13],
-  [45, 21],
-  [12, 22],
-  [35, 36],
-  [25, 51],
-  [15, 5],
-  [40, 37],
-  [2, 14],
-  [46, 29],
-  [44, 26],
-  [50, 27],
-  [59, 6],
-  [32, 54],
-  [28, 38],
-  [18, 58],
-  [19, 49],
-  [39, 55],
-  [41, 30],
-];

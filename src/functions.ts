@@ -1,6 +1,6 @@
-import { SHAPES, tDrawDataItem } from "./Canvas";
-import { RECT_SIDES_COUNT, drawRectungleComponent } from "./Rectungle";
+import { drawRectungleComponent } from "./Rectungle";
 import { drawTriangleComponent } from "./Triangle";
+import { SHAPES, tDrawDataItem } from "./constants";
 import { calcPointsOnEdge } from "./mathFunctions";
 
 export const sliceGatedByEdges = (gates: number[], edgesCount: number) => {
@@ -15,11 +15,11 @@ export const sliceGatedByEdges = (gates: number[], edgesCount: number) => {
 
 //Canvas functions
 
-export function drawGateText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number) {
+export function drawGateText(ctx: CanvasRenderingContext2D, name: number, x: number, y: number) {
   ctx.beginPath();
   ctx.font = "12px Arial";
   ctx.fillStyle = "white";
-  ctx.fillText(text, x, y);
+  ctx.fillText(`${name}`, x, y);
   ctx.closePath();
 }
 export const drawTriangleOnCanvas = (
