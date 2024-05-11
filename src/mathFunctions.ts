@@ -1,5 +1,7 @@
+import { SHAPES } from "./Canvas";
+
 export const TRIANGLE_EDGE_LENGHT = 100;
-export const RECTANGLE_EDGE_LENGHT = 80;
+export const RECTANGLE_EDGE_LENGHT = 90;
 
 export function rotateTriangleCoordinates(
   p1x: number,
@@ -37,7 +39,7 @@ export function getPointRotateCoord(x: number, y: number, angle: number, centerX
 export function getTriangleVertexesBySingle(angle1: number, angle2: number, x: number, y: number, scaleKoef: number) {
   // Вычислить длину стороны a
   //const a = (100 / Math.sin((angle1 * Math.PI) / 180)) * (scaleKoef !== 1 ? scaleKoef : 1);
-  const a = TRIANGLE_EDGE_LENGHT * (scaleKoef !== 1 ? scaleKoef : 1);
+  const a = TRIANGLE_EDGE_LENGHT * scaleKoef; //(scaleKoef !== 1 ? scaleKoef : 1);
   // Вычислить координаты второй вершины
   const x2 = x + a * Math.cos((angle1 * Math.PI) / 180);
   const y2 = y + a * Math.sin((angle1 * Math.PI) / 180);
@@ -58,26 +60,26 @@ export function getTriangleVertexesBySingle(angle1: number, angle2: number, x: n
 }
 
 //Высчитываем позиции цифр квадрата
-export function calcPointsOnEdgeRect(x1: number, x2: number, y1: number, y2: number, sliceCount: number) {
+/* export function calcPointsOnEdgeRect(x1: number, x2: number, y1: number, y2: number, sliceCount: number) {
   const result = [];
   const dx = x1 !== x2 ? -(x1 - x2) / sliceCount : 0;
   const dy = y1 !== y2 ? -(y1 - y2) / sliceCount : 0;
-  //console.log("-----dx dy", dx, dy);
-  // console.log(x1, x2, "x--y", y1, y2);
   for (let i = 1; i <= sliceCount; i++) {
     const x = Math.floor(x1 + i * dx);
     const y = Math.floor(y1 + i * dy);
     result.push([Math.floor(x), Math.floor(y)]);
   }
   return result;
-}
-//Высчитываем позиции цифр треугольника
-export function calcPointsOnEdge(x1: number, x2: number, y1: number, y2: number, sliceCount: number) {
+} */
+//Высчитываем позиции цифр
+export function calcPointsOnEdge(shape: SHAPES, x1: number, x2: number, y1: number, y2: number, sliceCount: number) {
   const result = [];
+  //const extraMoveByX = shape === SHAPES.TRIANGLE ? 5 : 0;
+  // const extraMoveByY = shape === SHAPES.TRIANGLE ? 10 : 0;
   const dx = -(x1 - x2) / sliceCount;
   const dy = -(y1 - y2) / sliceCount;
   for (let i = 0; i < sliceCount; i++) {
-    const x = Math.floor(x1 + i * dx);
+    const x = Math.floor(x1 + i * dx); //** */
     const y = Math.floor(y1 + i * dy);
     result.push([Math.floor(x), Math.floor(y)]);
   }

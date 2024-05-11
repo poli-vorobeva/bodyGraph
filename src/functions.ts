@@ -1,6 +1,7 @@
 import { SHAPES, tDrawDataItem } from "./Canvas";
-import { drawRectungleComponent } from "./Rectungle";
+import { RECT_SIDES_COUNT, drawRectungleComponent } from "./Rectungle";
 import { drawTriangleComponent } from "./Triangle";
+import { calcPointsOnEdge } from "./mathFunctions";
 
 export const sliceGatedByEdges = (gates: number[], edgesCount: number) => {
   const slicedGates = [];
@@ -55,7 +56,7 @@ const defineDataFunction = (shape: SHAPES) => {
 };
 
 //Get Coordinates Function
-export type tGatePoints = { name: string; points: number[] };
+export type tGatePoints = { name: number; points: number[] };
 export type tDataForDraw = {
   shape: SHAPES;
   shapePoints: { x: number; y: number }[];
@@ -66,6 +67,7 @@ export const getDataForDraw = (element: tDrawDataItem): tDataForDraw => {
   const currentFunction = defineDataFunction(element.shape);
 
   const { gates, shapePoints } = currentFunction(
+    element.shape,
     element.gates,
     element.startCoordinates[0],
     element.startCoordinates[1],
@@ -77,4 +79,47 @@ export const getDataForDraw = (element: tDrawDataItem): tDataForDraw => {
     shapePoints,
     gates,
   };
+};
+
+export const getGatesCoordinates = (
+  shape: SHAPES,
+  sidesCount: number,
+  gates: number[],
+  innerPoints: { x: number; y: number }[],
+) => {
+  const elInEdge = Math.floor(gates.length / sidesCount);
+  const slicedGates = sliceGatedByEdges(gates, elInEdge);
+  const gatesPoints: tGatePoints[] = [];
+  for (let i = 0; i < slicedGates.length; i++) {
+    const secontPointIndex = i + 1 < slicedGates.length ? i + 1 : 0;
+    const firstPoint = { ...innerPoints[i] };
+    const secondPoint = { ...innerPoints[secontPointIndex] };
+    if (slicedGates[i].length === 3 && shape === SHAPES.RECTANGLE) {
+      if (firstPoint.x < secondPoint.x) {
+        firstPoint.x += 15;
+      }
+      if (firstPoint.x > secondPoint.x) {
+        firstPoint.x -= 10;
+      }
+      if (firstPoint.y > secondPoint.y) {
+        firstPoint.y -= 15;
+      }
+      if (firstPoint.y < secondPoint.y) {
+        firstPoint.y += 15;
+        secondPoint.y += 5;
+      }
+    }
+    const edgeBreakPoints = calcPointsOnEdge(
+      shape,
+      firstPoint.x,
+      secondPoint.x,
+      firstPoint.y,
+      secondPoint.y,
+      slicedGates[i].length,
+    );
+    slicedGates[i].forEach((g, index) => {
+      gatesPoints.push({ name: g, points: edgeBreakPoints[index] });
+    });
+  }
+  return gatesPoints;
 };

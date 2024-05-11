@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import styles from "./App.module.scss";
 import { Canvas } from "./Canvas";
 
 export const CanvasElement = () => {

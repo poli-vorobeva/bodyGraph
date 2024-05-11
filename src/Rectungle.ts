@@ -1,5 +1,6 @@
-import { sliceGatedByEdges, tGatePoints } from "./functions";
-import { RECTANGLE_EDGE_LENGHT, calcPointsOnEdgeRect, getPointRotateCoord } from "./mathFunctions";
+import { SHAPES } from "./Canvas";
+import { getGatesCoordinates } from "./functions";
+import { RECTANGLE_EDGE_LENGHT, getPointRotateCoord } from "./mathFunctions";
 
 const getRectPoints = (x: number, y: number, edgeLenght: number, rotateAngle: number) => {
   const startPoints = [
@@ -27,8 +28,9 @@ const getRectCenterCoords = (points: number[][]) => {
     )
     .map((sumCoord) => sumCoord / 4);
 };
+export const RECT_SIDES_COUNT = 4;
 
-export const drawRectungleComponent = (gates: number[], sX: number, sY: number, rotateAngle: number) => {
+export const drawRectungleComponent = (shape: SHAPES, gates: number[], sX: number, sY: number, rotateAngle: number) => {
   const points = getRectPoints(sX, sY, RECTANGLE_EDGE_LENGHT, rotateAngle);
   const innerOffset = 14;
   const iPoints = getRectPoints(
@@ -37,35 +39,7 @@ export const drawRectungleComponent = (gates: number[], sX: number, sY: number, 
     RECTANGLE_EDGE_LENGHT - innerOffset * 2,
     rotateAngle,
   );
-  // drawRectOnCanvas(ctx, "black", points);
 
-  // drawRectOnCanvas(ctx, "unset", iPoints);
-
-  const drawEdges = (gates: number[], innerPoints: { x: number; y: number }[]) => {
-    const elsInSlice = Math.ceil(gates.length / 4);
-    const slicedGates = sliceGatedByEdges(gates, elsInSlice);
-    const gatesPoints: tGatePoints[] = [];
-    for (let i = 0; i < slicedGates.length; i++) {
-      const secontPointIndex = i + 1 <= slicedGates.length - 1 ? i + 1 : 0;
-      const edgeBreakPoints = calcPointsOnEdgeRect(
-        innerPoints[i].x,
-        innerPoints[secontPointIndex].x,
-        innerPoints[i].y,
-        innerPoints[secontPointIndex].y,
-        slicedGates[i].length,
-      );
-      slicedGates[i].forEach((g, index) => {
-        gatesPoints.push({ name: `${g}`, points: edgeBreakPoints[index] });
-
-        /* ctx.beginPath();
-        ctx.fillStyle = "white";
-        ctx.fillText(`${g}`, edgeBreakPoints[index][0], edgeBreakPoints[index][1]); */
-      });
-    }
-    return {
-      shapePoints: points,
-      gates: gatesPoints,
-    };
-  };
-  return drawEdges(gates, iPoints);
+  const gatesCoords = getGatesCoordinates(shape, RECT_SIDES_COUNT, gates, iPoints);
+  return { gates: gatesCoords, shapePoints: points };
 };
