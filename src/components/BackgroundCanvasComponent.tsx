@@ -3,11 +3,11 @@ import { BackgroundCanvas } from "../canvasComponents/backgroundCanvas/Backgroun
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../canvasComponents/constants";
 
 export const BackgroundCanvasElement = () => {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (canvasRef.current) {
-      canvasRef!.current.width = CANVAS_WIDTH;
-      canvasRef!.current.height = CANVAS_HEIGHT;
+      canvasRef.current.width = CANVAS_WIDTH;
+      canvasRef.current.height = CANVAS_HEIGHT;
       const canvas = new BackgroundCanvas(canvasRef!.current);
       canvas.init();
     }

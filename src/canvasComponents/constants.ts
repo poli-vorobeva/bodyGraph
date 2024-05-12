@@ -38,7 +38,7 @@ export enum SHAPES_EDGES_COUNT {
 export type tDrawDataItem = {
   title: CENTER_NAME;
   shape: SHAPES;
-  gates: (string | number)[];
+  gates: number[];
   rotateAngle: number;
   startCoordinates: number[];
   edgeWidth: number;

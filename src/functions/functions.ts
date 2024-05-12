@@ -16,11 +16,13 @@ export const sliceGatedByEdges = (gates: number[], edgesCount: number) => {
 //Canvas functions
 
 export function drawGateText(ctx: CanvasRenderingContext2D, name: number, x: number, y: number, isActive: boolean) {
-  ctx.beginPath();
-  ctx.font = `${FONT_SIZE}px Arial`;
-  ctx.fillStyle = isActive ? COLORS.WHITE : COLORS.LIGHTGREY;
-  ctx.fillText(`${name}`, x, y);
-  ctx.closePath();
+  if (name) {
+    ctx.beginPath();
+    ctx.font = `${FONT_SIZE}px Arial`;
+    ctx.fillStyle = isActive ? COLORS.WHITE : COLORS.LIGHTGREY;
+    ctx.fillText(`${name}`, x, y);
+    ctx.closePath();
+  }
 }
 
 export const drawTriangleOnCanvas = (
@@ -68,15 +70,7 @@ export type tDataForDraw = {
 export const getDataForDraw = (element: tDrawDataItem): tDataForDraw => {
   const currentFunction = defineDataFunction(element.shape);
 
-  const { gates, shapePoints } = currentFunction(
-    element.shape,
-    element.gates,
-    element.startCoordinates[0],
-    element.startCoordinates[1],
-    element.edgeWidth,
-    element.rotateAngle,
-    element.extraAngles,
-  );
+  const { gates, shapePoints } = currentFunction(element);
   return {
     shape: element.shape,
     color: element.color,

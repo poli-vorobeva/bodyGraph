@@ -7,7 +7,6 @@ import {
   tDataForDraw,
   tGatePoints,
 } from "../functions/functions";
-import { tGateRelations } from "../slices/graphSlice";
 import { drawData } from "./staticData";
 enum PATH_WIDTH {
   ACTIVE = 3,
@@ -27,7 +26,7 @@ export class Canvas {
   private height: number;
   gatesCoordinates: Map<number, number[]>;
   gateRelations: Record<number, number>;
-  gatePaths: tGateRelations;
+  gatePaths: [number, number][];
   activeGates: Set<number>;
   dataToDraw: tDataForDraw[];
   activeGatesDataToDraw: tAvtiveGateDraw[];
@@ -36,7 +35,7 @@ export class Canvas {
     parent: HTMLCanvasElement,
     gateRelations: Record<number, number>,
     gatePaths: [number, number][],
-    activeGates: Set<number>,
+    activeGates: number[],
   ) {
     this.width = parent.width;
     this.height = parent.height;
@@ -44,20 +43,23 @@ export class Canvas {
     this.gatesCoordinates = new Map();
     this.gatePaths = gatePaths;
     this.gateRelations = gateRelations;
+    this.dataToDraw = [];
     this.activeGates = new Set(activeGates);
     this.activeGatesDataToDraw = [];
   }
   private drawPaths(isFisrtRender: boolean) {
     if (isFisrtRender) {
       const steps = 30;
-      const toAnimateData = this.gatePaths.map(([g1, g2]) => {
-        const firstGate = this.gatesCoordinates.get(g1);
-        const secondGate = this.gatesCoordinates.get(g2);
-        if (firstGate && secondGate) {
-          return getAnimatePathData(firstGate[0], firstGate[1], secondGate[0], secondGate[1], steps, true);
-        }
-      });
-      this.drawLines(toAnimateData, COLORS.GREY, COLORS.GREY, PATH_WIDTH.REGULAR);
+      const toAnimateData = this.gatePaths
+        .map(([g1, g2]) => {
+          const firstGate = this.gatesCoordinates.get(g1);
+          const secondGate = this.gatesCoordinates.get(g2);
+          if (firstGate && secondGate) {
+            return getAnimatePathData(firstGate[0], firstGate[1], secondGate[0], secondGate[1], steps, true);
+          }
+        })
+        .filter((e) => e);
+      this.drawLines(toAnimateData as tAvtiveGateDraw[], COLORS.GREY, COLORS.GREY, PATH_WIDTH.REGULAR);
     } else {
       this.gatePaths.forEach(([g1, g2]) => {
         const firstGate = this.gatesCoordinates.get(g1);

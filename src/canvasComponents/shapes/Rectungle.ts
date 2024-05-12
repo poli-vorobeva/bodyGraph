@@ -1,4 +1,4 @@
-import { SHAPES } from "../constants";
+import { SHAPES_EDGES_COUNT, tDrawDataItem } from "../constants";
 import { getGatesCoordinates } from "../../functions/functions";
 import { getPointRotateCoord } from "../../functions/mathFunctions";
 
@@ -26,22 +26,26 @@ const getRectCenterCoords = (points: number[][]) => {
       },
       [0, 0],
     )
-    .map((sumCoord) => sumCoord / 4);
+    .map((sumCoord) => sumCoord / SHAPES_EDGES_COUNT.RECTANGLE);
 };
-export const RECT_SIDES_COUNT = 4;
 
-export const getReactungleData = (
-  shape: SHAPES,
+export const getReactungleData = ({ shape, gates, startCoordinates, edgeWidth, rotateAngle }: tDrawDataItem) =>
+  /*  shape: SHAPES,
   gates: number[],
   sX: number,
   sY: number,
   edgeLenght: number,
-  rotateAngle: number,
-) => {
-  const points = getRectPoints(sX, sY, edgeLenght, rotateAngle);
-  const innerOffset = 14;
-  const iPoints = getRectPoints(sX + innerOffset - 4, sY + innerOffset + 4, edgeLenght - innerOffset * 2, rotateAngle);
+  rotateAngle: number, */
+  {
+    const points = getRectPoints(startCoordinates[0], startCoordinates[1], edgeWidth, rotateAngle);
+    const innerOffset = 14;
+    const iPoints = getRectPoints(
+      startCoordinates[0] + innerOffset - 4,
+      startCoordinates[1] + innerOffset + 4,
+      edgeWidth - innerOffset * 2,
+      rotateAngle,
+    );
 
-  const gatesCoords = getGatesCoordinates(shape, RECT_SIDES_COUNT, gates, iPoints);
-  return { gates: gatesCoords, shapePoints: points };
-};
+    const gatesCoords = getGatesCoordinates(shape, SHAPES_EDGES_COUNT.RECTANGLE, gates, iPoints);
+    return { gates: gatesCoords, shapePoints: points };
+  };

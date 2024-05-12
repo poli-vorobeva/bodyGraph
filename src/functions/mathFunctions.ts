@@ -1,5 +1,3 @@
-import { TRIANGLE_EDGE_LENGHT } from "../canvasComponents/constants";
-
 export function rotateTriangleCoordinates(
   p1x: number,
   p2x: number,
@@ -39,7 +37,6 @@ export function getTriangleVertexesBySingle(
   edgeLenght: number,
   scaleKoef: number,
 ) {
-  //const a = (100 / Math.sin((angle1 * Math.PI) / 180)) * (scaleKoef !== 1 ? scaleKoef : 1);
   const a = edgeLenght * scaleKoef;
   // Вычислить координаты второй вершины
   const x2 = x + a * Math.cos((angle1 * Math.PI) / 180);
