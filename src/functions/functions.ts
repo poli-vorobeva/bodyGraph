@@ -129,3 +129,25 @@ export const getGatesCoordinates = (
   }
   return gatesPoints;
 };
+
+export const getAnimatePathData = (
+  fPx: number,
+  fPy: number,
+  sPx: number,
+  sPy: number,
+  step: number,
+  isFull: boolean,
+) => {
+  const defineToTargetPointX = isFull ? sPx : Math.floor((fPx + sPx) / 2);
+  const defineToTargetPointY = isFull ? sPy : Math.floor((fPy + sPy) / 2);
+  const defineXStep = (defineToTargetPointX - fPx) / step;
+  const defineYStep = (defineToTargetPointY - fPy) / step;
+  return {
+    startX: fPx + FONT_SIZE / 2,
+    startY: fPy - FONT_SIZE / 2,
+    endX: defineToTargetPointX + FONT_SIZE / 2,
+    endY: defineToTargetPointY - FONT_SIZE / 2,
+    stepX: defineXStep,
+    stepY: defineYStep,
+  };
+};

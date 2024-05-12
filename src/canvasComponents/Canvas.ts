@@ -2,13 +2,17 @@ import { COLORS, FONT_SIZE } from "./constants";
 import {
   defineDrawShapeFunction,
   drawGateText,
+  getAnimatePathData,
   getDataForDraw,
   tDataForDraw,
   tGatePoints,
 } from "../functions/functions";
 import { tGateRelations } from "../slices/graphSlice";
 import { drawData } from "./staticData";
-
+enum PATH_WIDTH {
+  ACTIVE = 3,
+  REGULAR = 1,
+}
 type tAvtiveGateDraw = {
   startX: number;
   startY: number;
@@ -43,21 +47,34 @@ export class Canvas {
     this.activeGates = new Set(activeGates);
     this.activeGatesDataToDraw = [];
   }
-  private drawPaths() {
-    this.gatePaths.forEach(([g1, g2]) => {
-      const firstGate = this.gatesCoordinates.get(g1);
-      const secondGate = this.gatesCoordinates.get(g2);
-      if (firstGate && secondGate) {
-        this.ctx.beginPath();
-        this.ctx.moveTo(+firstGate[0] + FONT_SIZE / 2, +firstGate[1] - FONT_SIZE / 2);
-        this.ctx.lineTo(+secondGate[0] + FONT_SIZE / 2, +secondGate[1] - FONT_SIZE / 2);
-        this.ctx.strokeStyle = COLORS.LIGHTGREY;
-        this.ctx.stroke();
-        this.ctx.closePath();
-      }
-    });
+  private drawPaths(isFisrtRender: boolean) {
+    if (isFisrtRender) {
+      const steps = 30;
+      const toAnimateData = this.gatePaths.map(([g1, g2]) => {
+        const firstGate = this.gatesCoordinates.get(g1);
+        const secondGate = this.gatesCoordinates.get(g2);
+        if (firstGate && secondGate) {
+          return getAnimatePathData(firstGate[0], firstGate[1], secondGate[0], secondGate[1], steps, true);
+        }
+      });
+      this.drawLines(toAnimateData, COLORS.GREY, COLORS.GREY, PATH_WIDTH.REGULAR);
+    } else {
+      this.gatePaths.forEach(([g1, g2]) => {
+        const firstGate = this.gatesCoordinates.get(g1);
+        const secondGate = this.gatesCoordinates.get(g2);
+        if (firstGate && secondGate) {
+          this.ctx.beginPath();
+          this.ctx.strokeStyle = COLORS.GREY;
+          this.ctx.lineWidth = PATH_WIDTH.REGULAR;
+          this.ctx.moveTo(+firstGate[0] + FONT_SIZE / 2, +firstGate[1] - FONT_SIZE / 2);
+          this.ctx.lineTo(+secondGate[0] + FONT_SIZE / 2, +secondGate[1] - FONT_SIZE / 2);
+          this.ctx.stroke();
+          this.ctx.closePath();
+        }
+      });
+    }
   }
-  public init() {
+  public init(isFisrtRender: boolean) {
     const dataToDraw = drawData(this.width).map((element) => {
       return getDataForDraw(element);
     });
@@ -66,10 +83,9 @@ export class Canvas {
     this.getActiveGatesDataToDraw();
 
     this.ctx.clearRect(0, 0, this.width, this.height);
-    this.drawPaths();
-
+    this.drawPaths(isFisrtRender);
     this.drawBase(dataToDraw);
-    this.drawLines(this.activeGatesDataToDraw);
+    this.drawLines(this.activeGatesDataToDraw, COLORS.YELLOW, COLORS.ORANGE, PATH_WIDTH.ACTIVE);
   }
   private addGatesCoordinates(dataToDraw: tDataForDraw[]) {
     dataToDraw.forEach((center) => {
@@ -96,35 +112,22 @@ export class Canvas {
       const currentGate = this.gatesCoordinates.get(activeGate);
       const toGate = this.gatesCoordinates.get(this.gateRelations[activeGate] || 0);
       if (currentGate && toGate) {
-        const defineToTargetPointX = Math.floor((currentGate[0] + toGate[0]) / 2);
-        const defineToTargetPointY = Math.floor((currentGate[1] + toGate[1]) / 2);
-        const defineXStep = (defineToTargetPointX - currentGate[0]) / step;
-        const defineYStep = (defineToTargetPointY - currentGate[1]) / step;
-        drawCoordinates.push({
-          startX: currentGate[0] + FONT_SIZE / 2,
-          startY: currentGate[1] - FONT_SIZE / 2,
-          endX: defineToTargetPointX + FONT_SIZE / 2,
-          endY: defineToTargetPointY - FONT_SIZE / 2,
-          stepX: defineXStep,
-          stepY: defineYStep,
-        });
+        drawCoordinates.push(getAnimatePathData(currentGate[0], currentGate[1], toGate[0], toGate[1], step, false));
       }
     });
     this.activeGatesDataToDraw = drawCoordinates;
   }
-  private drawLines(
-    lines: { startX: number; startY: number; endX: number; endY: number; stepX: number; stepY: number }[],
-  ) {
+  private drawLines(lines: tAvtiveGateDraw[], color1: COLORS, color2: COLORS, lineWidth: number) {
     for (const line of lines) {
       let currentX = line.startX;
       let currentY = line.startY;
       const drawLineStep = () => {
         this.ctx.beginPath();
         const grd = this.ctx.createLinearGradient(0, 0, 200, 0);
-        grd.addColorStop(0, "yellow");
-        grd.addColorStop(1, "orange");
+        grd.addColorStop(0, color1);
+        grd.addColorStop(1, color2);
         this.ctx.strokeStyle = grd;
-        this.ctx.lineWidth = 3;
+        this.ctx.lineWidth = lineWidth;
         this.ctx.moveTo(currentX, currentY);
         currentX += line.stepX;
         currentY += line.stepY;
