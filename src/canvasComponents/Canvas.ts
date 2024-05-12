@@ -1,6 +1,12 @@
 import { COLORS, FONT_SIZE } from "./constants";
-import { defineDrawShapeFunction, drawGateText, getDataForDraw, tDataForDraw, tGatePoints } from "./functions";
-import { tGateRelations } from "./slices/graphSlice";
+import {
+  defineDrawShapeFunction,
+  drawGateText,
+  getDataForDraw,
+  tDataForDraw,
+  tGatePoints,
+} from "../functions/functions";
+import { tGateRelations } from "../slices/graphSlice";
 import { drawData } from "./staticData";
 
 type tAvtiveGateDraw = {
@@ -117,10 +123,7 @@ export class Canvas {
         const grd = this.ctx.createLinearGradient(0, 0, 200, 0);
         grd.addColorStop(0, "yellow");
         grd.addColorStop(1, "orange");
-
-        // Заполняем градиентом фигуру
         this.ctx.strokeStyle = grd;
-        // this.ctx.strokeStyle = "blue";
         this.ctx.lineWidth = 3;
         this.ctx.moveTo(currentX, currentY);
         currentX += line.stepX;

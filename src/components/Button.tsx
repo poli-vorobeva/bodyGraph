@@ -1,5 +1,5 @@
-import { useAppDispatch } from "./slices";
-import { onRandomGates } from "./slices/graphSlice";
+import { useAppDispatch } from "../slices";
+import { onRandomGates } from "../slices/graphSlice";
 
 const RANDOM_GENERATE = "Сгеренировать случайно";
 

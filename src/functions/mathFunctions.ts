@@ -1,4 +1,4 @@
-import { TRIANGLE_EDGE_LENGHT } from "./constants";
+import { TRIANGLE_EDGE_LENGHT } from "../canvasComponents/constants";
 
 export function rotateTriangleCoordinates(
   p1x: number,

@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
-import { Canvas } from "./Canvas";
+import { Canvas } from "../canvasComponents/Canvas";
 import { useSelector } from "react-redux";
-import { RootState } from "./slices";
-import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./constants";
+import { RootState } from "../slices";
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../canvasComponents/constants";
 
 export const CanvasElement = () => {
   const canvasRef = useRef(null);

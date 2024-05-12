@@ -1,6 +1,6 @@
-import { getReactungleData } from "./Rectungle";
-import { getTriangleData } from "./Triangle";
-import { COLORS, FONT_SIZE, SHAPES, SHAPES_EDGES_COUNT, tDrawDataItem } from "./constants";
+import { getReactungleData } from "../canvasComponents/shapes/Rectungle";
+import { getTriangleData } from "../canvasComponents/shapes/Triangle";
+import { COLORS, FONT_SIZE, SHAPES, SHAPES_EDGES_COUNT, tDrawDataItem } from "../canvasComponents/constants";
 import { calcPointsOnEdge } from "./mathFunctions";
 
 export const sliceGatedByEdges = (gates: number[], edgesCount: number) => {

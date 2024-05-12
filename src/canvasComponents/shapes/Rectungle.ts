@@ -1,6 +1,6 @@
-import { SHAPES } from "./constants";
-import { getGatesCoordinates } from "./functions";
-import { getPointRotateCoord } from "./mathFunctions";
+import { SHAPES } from "../constants";
+import { getGatesCoordinates } from "../../functions/functions";
+import { getPointRotateCoord } from "../../functions/mathFunctions";
 
 const getRectPoints = (x: number, y: number, edgeLenght: number, rotateAngle: number) => {
   const startPoints = [

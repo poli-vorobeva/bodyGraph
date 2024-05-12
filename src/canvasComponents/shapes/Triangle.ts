@@ -1,6 +1,10 @@
-import { SHAPES } from "./Canvas";
-import { getGatesCoordinates } from "./functions";
-import { getCenterCoordinates, getTriangleVertexesBySingle, rotateTriangleCoordinates } from "./mathFunctions";
+import { SHAPES } from "../Canvas";
+import { getGatesCoordinates } from "../../functions/functions";
+import {
+  getCenterCoordinates,
+  getTriangleVertexesBySingle,
+  rotateTriangleCoordinates,
+} from "../../functions/mathFunctions";
 const DEFAULT_ANGLE = 60;
 const INNER_TRIANGLE_SCALE = 0.55;
 const SHAPE_SIDES_COUNT = 3;
