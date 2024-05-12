@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Canvas } from "./Canvas";
 import { useSelector } from "react-redux";
 import { RootState } from "./slices";
-import { CANVAS_WIDTH } from "./constants";
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from "./constants";
 
 export const CanvasElement = () => {
   const canvasRef = useRef(null);
@@ -12,7 +12,7 @@ export const CanvasElement = () => {
   useEffect(() => {
     if (canvasRef.current) {
       canvasRef!.current.width = CANVAS_WIDTH;
-      canvasRef!.current.height = 700;
+      canvasRef!.current.height = CANVAS_HEIGHT;
       const canvas = new Canvas(canvasRef!.current, gatesRelations, gatePaths, activeGates);
       canvas.init();
     }

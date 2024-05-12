@@ -1,6 +1,6 @@
-import { drawRectungleComponent } from "./Rectungle";
-import { drawTriangleComponent } from "./Triangle";
-import { SHAPES, tDrawDataItem } from "./constants";
+import { getReactungleData } from "./Rectungle";
+import { getTriangleData } from "./Triangle";
+import { COLORS, FONT_SIZE, SHAPES, SHAPES_EDGES_COUNT, tDrawDataItem } from "./constants";
 import { calcPointsOnEdge } from "./mathFunctions";
 
 export const sliceGatedByEdges = (gates: number[], edgesCount: number) => {
@@ -15,13 +15,14 @@ export const sliceGatedByEdges = (gates: number[], edgesCount: number) => {
 
 //Canvas functions
 
-export function drawGateText(ctx: CanvasRenderingContext2D, name: number, x: number, y: number) {
+export function drawGateText(ctx: CanvasRenderingContext2D, name: number, x: number, y: number, isActive: boolean) {
   ctx.beginPath();
-  ctx.font = "12px Arial";
-  ctx.fillStyle = "white";
+  ctx.font = `${FONT_SIZE}px Arial`;
+  ctx.fillStyle = isActive ? COLORS.WHITE : COLORS.LIGHTGREY;
   ctx.fillText(`${name}`, x, y);
   ctx.closePath();
 }
+
 export const drawTriangleOnCanvas = (
   ctx: CanvasRenderingContext2D,
   color: string,
@@ -52,13 +53,14 @@ export const defineDrawShapeFunction = (shape: SHAPES) => {
   return shape === SHAPES.TRIANGLE ? drawTriangleOnCanvas : drawRectOnCanvas;
 };
 const defineDataFunction = (shape: SHAPES) => {
-  return shape === SHAPES.TRIANGLE ? drawTriangleComponent : drawRectungleComponent;
+  return shape === SHAPES.TRIANGLE ? getTriangleData : getReactungleData;
 };
 
 //Get Coordinates Function
 export type tGatePoints = { name: number; points: number[] };
 export type tDataForDraw = {
   shape: SHAPES;
+  color: COLORS;
   shapePoints: { x: number; y: number }[];
   gates: tGatePoints[];
 };
@@ -71,11 +73,13 @@ export const getDataForDraw = (element: tDrawDataItem): tDataForDraw => {
     element.gates,
     element.startCoordinates[0],
     element.startCoordinates[1],
+    element.edgeWidth,
     element.rotateAngle,
     element.extraAngles,
   );
   return {
     shape: element.shape,
+    color: element.color,
     shapePoints,
     gates,
   };
@@ -94,12 +98,14 @@ export const getGatesCoordinates = (
     const secontPointIndex = i + 1 < slicedGates.length ? i + 1 : 0;
     const firstPoint = { ...innerPoints[i] };
     const secondPoint = { ...innerPoints[secontPointIndex] };
-    if (slicedGates[i].length === 3 && shape === SHAPES.RECTANGLE) {
+    if (slicedGates[i].length === SHAPES_EDGES_COUNT.TRIANGLE && shape === SHAPES.RECTANGLE) {
       if (firstPoint.x < secondPoint.x) {
-        firstPoint.x += 15;
+        firstPoint.x += 10;
+        //secondPoint.x -= 10;
       }
       if (firstPoint.x > secondPoint.x) {
-        firstPoint.x -= 10;
+        firstPoint.x -= 15;
+        secondPoint.x -= 10;
       }
       if (firstPoint.y > secondPoint.y) {
         firstPoint.y -= 15;
@@ -110,7 +116,6 @@ export const getGatesCoordinates = (
       }
     }
     const edgeBreakPoints = calcPointsOnEdge(
-      shape,
       firstPoint.x,
       secondPoint.x,
       firstPoint.y,
@@ -118,6 +123,7 @@ export const getGatesCoordinates = (
       slicedGates[i].length,
     );
     slicedGates[i].forEach((g, index) => {
+      //там где активные ворота
       gatesPoints.push({ name: g, points: edgeBreakPoints[index] });
     });
   }

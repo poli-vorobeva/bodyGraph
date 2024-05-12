@@ -1,6 +1,6 @@
-import { SHAPES } from "./Canvas";
+import { SHAPES } from "./constants";
 import { getGatesCoordinates } from "./functions";
-import { RECTANGLE_EDGE_LENGHT, getPointRotateCoord } from "./mathFunctions";
+import { getPointRotateCoord } from "./mathFunctions";
 
 const getRectPoints = (x: number, y: number, edgeLenght: number, rotateAngle: number) => {
   const startPoints = [
@@ -30,15 +30,17 @@ const getRectCenterCoords = (points: number[][]) => {
 };
 export const RECT_SIDES_COUNT = 4;
 
-export const drawRectungleComponent = (shape: SHAPES, gates: number[], sX: number, sY: number, rotateAngle: number) => {
-  const points = getRectPoints(sX, sY, RECTANGLE_EDGE_LENGHT, rotateAngle);
+export const getReactungleData = (
+  shape: SHAPES,
+  gates: number[],
+  sX: number,
+  sY: number,
+  edgeLenght: number,
+  rotateAngle: number,
+) => {
+  const points = getRectPoints(sX, sY, edgeLenght, rotateAngle);
   const innerOffset = 14;
-  const iPoints = getRectPoints(
-    sX + innerOffset - 6,
-    sY + innerOffset + 6,
-    RECTANGLE_EDGE_LENGHT - innerOffset * 2,
-    rotateAngle,
-  );
+  const iPoints = getRectPoints(sX + innerOffset - 4, sY + innerOffset + 4, edgeLenght - innerOffset * 2, rotateAngle);
 
   const gatesCoords = getGatesCoordinates(shape, RECT_SIDES_COUNT, gates, iPoints);
   return { gates: gatesCoords, shapePoints: points };

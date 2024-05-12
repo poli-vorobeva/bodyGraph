@@ -1,7 +1,4 @@
-import { SHAPES } from "./Canvas";
-
-export const TRIANGLE_EDGE_LENGHT = 100;
-export const RECTANGLE_EDGE_LENGHT = 90;
+import { TRIANGLE_EDGE_LENGHT } from "./constants";
 
 export function rotateTriangleCoordinates(
   p1x: number,
@@ -26,20 +23,24 @@ export function getCenterCoordinates(x1: number, x2: number, x3: number, y1: num
 }
 
 export function getPointRotateCoord(x: number, y: number, angle: number, centerX: number, centerY: number) {
-  // Преобразовать угол в радианы
   const radians = (angle * Math.PI) / 180;
-  // Рассчитать новые координаты
+
   const xPrime = (x - centerX) * Math.cos(radians) - (y - centerY) * Math.sin(radians) + centerX;
   const yPrime = (x - centerX) * Math.sin(radians) + (y - centerY) * Math.cos(radians) + centerY;
 
-  // Вернуть новые координаты
   return { x: Math.floor(xPrime), y: Math.floor(yPrime) };
 }
 
-export function getTriangleVertexesBySingle(angle1: number, angle2: number, x: number, y: number, scaleKoef: number) {
-  // Вычислить длину стороны a
+export function getTriangleVertexesBySingle(
+  angle1: number,
+  angle2: number,
+  x: number,
+  y: number,
+  edgeLenght: number,
+  scaleKoef: number,
+) {
   //const a = (100 / Math.sin((angle1 * Math.PI) / 180)) * (scaleKoef !== 1 ? scaleKoef : 1);
-  const a = TRIANGLE_EDGE_LENGHT * scaleKoef; //(scaleKoef !== 1 ? scaleKoef : 1);
+  const a = edgeLenght * scaleKoef;
   // Вычислить координаты второй вершины
   const x2 = x + a * Math.cos((angle1 * Math.PI) / 180);
   const y2 = y + a * Math.sin((angle1 * Math.PI) / 180);
@@ -47,7 +48,6 @@ export function getTriangleVertexesBySingle(angle1: number, angle2: number, x: n
   // Вычислить координаты третьей вершины
   const vx = x2 - x;
   const vy = y2 - y;
-
   const vx3 = vx * Math.cos((angle2 * Math.PI) / 180) - vy * Math.sin((angle2 * Math.PI) / 180);
   const vy3 = vx * Math.sin((angle2 * Math.PI) / 180) + vy * Math.cos((angle2 * Math.PI) / 180);
 
@@ -59,29 +59,14 @@ export function getTriangleVertexesBySingle(angle1: number, angle2: number, x: n
   ];
 }
 
-//Высчитываем позиции цифр квадрата
-/* export function calcPointsOnEdgeRect(x1: number, x2: number, y1: number, y2: number, sliceCount: number) {
+export function calcPointsOnEdge(x1: number, x2: number, y1: number, y2: number, sliceCount: number) {
   const result = [];
-  const dx = x1 !== x2 ? -(x1 - x2) / sliceCount : 0;
-  const dy = y1 !== y2 ? -(y1 - y2) / sliceCount : 0;
-  for (let i = 1; i <= sliceCount; i++) {
-    const x = Math.floor(x1 + i * dx);
-    const y = Math.floor(y1 + i * dy);
-    result.push([Math.floor(x), Math.floor(y)]);
-  }
-  return result;
-} */
-//Высчитываем позиции цифр
-export function calcPointsOnEdge(shape: SHAPES, x1: number, x2: number, y1: number, y2: number, sliceCount: number) {
-  const result = [];
-  //const extraMoveByX = shape === SHAPES.TRIANGLE ? 5 : 0;
-  // const extraMoveByY = shape === SHAPES.TRIANGLE ? 10 : 0;
   const dx = -(x1 - x2) / sliceCount;
   const dy = -(y1 - y2) / sliceCount;
   for (let i = 0; i < sliceCount; i++) {
-    const x = Math.floor(x1 + i * dx); //** */
+    const x = Math.floor(x1 + i * dx);
     const y = Math.floor(y1 + i * dy);
-    result.push([Math.floor(x), Math.floor(y)]);
+    result.push([x, y]);
   }
   return result;
 }
