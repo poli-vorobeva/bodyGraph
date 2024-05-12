@@ -1,0 +1,33 @@
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 25%;
+}
+
+.canvasBG {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.button {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  padding: 20px;
+  border-radius: 20px;
+  background: #a86889;
+  font-size: 20px;
+  border: none;
+  box-shadow: inset 0px 0px 20px 3px white;
+  color: aliceblue;
+  transition: all ease 1000ms;
+}
+
+.button:hover {
+  background: #72415b;
+}

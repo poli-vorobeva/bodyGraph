@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { BackgroundCanvas } from "../canvasComponents/backgroundCanvas/BackgroundCanvas";
+import classes from "./Canvas.module.scss";
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../canvasComponents/constants";
-
 export const BackgroundCanvasElement = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
@@ -13,18 +13,5 @@ export const BackgroundCanvasElement = () => {
     }
   }, []);
 
-  return (
-    <canvas
-      style={{
-        border: "1px solid red",
-        width: `${CANVAS_WIDTH}px`,
-        background: "black",
-        height: "700px",
-        top: "0",
-        left: "25%",
-        position: "absolute",
-      }}
-      ref={canvasRef}
-    />
-  );
+  return <canvas className={classes.canvas} ref={canvasRef} />;
 };
