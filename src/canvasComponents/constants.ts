@@ -4,6 +4,10 @@ export const CANVAS_HEIGHT = 700;
 export const TRIANGLE_EDGE_LENGHT = 100;
 export const RECTANGLE_EDGE_LENGHT = 90;
 
+export const DEFAULT_ANGLE = 60;
+export const INNER_TRIANGLE_SCALE = 0.55;
+export const SHAPE_SIDES_COUNT = 3;
+
 export const enum CENTER_NAME {
   HEAD = "Head",
   AJNA = "Ajna",
@@ -16,6 +20,12 @@ export const enum CENTER_NAME {
   HEART = "Heart",
 }
 export const FONT_SIZE = 12;
+export enum PATH_WIDTH {
+  ACTIVE = 3,
+  REGULAR = 1,
+}
+export const DRAW_GATES_STEPS = 20;
+
 export enum COLORS {
   BLACK = "black",
   RED = "red",
@@ -23,7 +33,7 @@ export enum COLORS {
   BLUE = "midnightblue",
   GREY = "dimgrey",
   WHITE = "white",
-  LIGHTGREY = "lightgrey",
+  LIGHTGREY = "grey",
   YELLOW = "lightyellow",
   ORANGE = "orangeRed",
 }

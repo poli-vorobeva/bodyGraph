@@ -73,7 +73,7 @@ export const drawData = (width: number): tDrawDataItem[] => {
         return [this.edgeWidth / 2, 450];
       },
       edgeWidth: RECTANGLE_EDGE_LENGHT + 10,
-      color: COLORS.GREY,
+      color: COLORS.BLUE,
     },
     {
       title: CENTER_NAME.SOLAR,
@@ -84,7 +84,7 @@ export const drawData = (width: number): tDrawDataItem[] => {
         return [width - this.edgeWidth / 2, 450];
       },
       edgeWidth: RECTANGLE_EDGE_LENGHT + 10,
-      color: COLORS.BLUE,
+      color: COLORS.GREY,
     },
     {
       title: CENTER_NAME.SPLEEN,

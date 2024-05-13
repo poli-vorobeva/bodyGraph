@@ -38,11 +38,10 @@ export function getTriangleVertexesBySingle(
   scaleKoef: number,
 ) {
   const a = edgeLenght * scaleKoef;
-  // Вычислить координаты второй вершины
+
   const x2 = x + a * Math.cos((angle1 * Math.PI) / 180);
   const y2 = y + a * Math.sin((angle1 * Math.PI) / 180);
 
-  // Вычислить координаты третьей вершины
   const vx = x2 - x;
   const vy = y2 - y;
   const vx3 = vx * Math.cos((angle2 * Math.PI) / 180) - vy * Math.sin((angle2 * Math.PI) / 180);

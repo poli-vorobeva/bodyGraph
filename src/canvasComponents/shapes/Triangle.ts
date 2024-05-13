@@ -4,10 +4,7 @@ import {
   getTriangleVertexesBySingle,
   rotateTriangleCoordinates,
 } from "../../functions/mathFunctions";
-import { tDrawDataItem } from "../constants";
-const DEFAULT_ANGLE = 60;
-const INNER_TRIANGLE_SCALE = 0.55;
-const SHAPE_SIDES_COUNT = 3;
+import { DEFAULT_ANGLE, INNER_TRIANGLE_SCALE, SHAPE_SIDES_COUNT, tDrawDataItem } from "../constants";
 
 const getTrianglePoints = (
   x: number,

@@ -72,9 +72,12 @@ const graphSlice = createSlice({
       }
       state.activeGates = [...gatesToActive];
     },
+    clearState: (state: IState) => {
+      state.activeGates = [];
+    },
   },
 });
 
-export const { onRandomGates } = graphSlice.actions;
+export const { onRandomGates, clearState } = graphSlice.actions;
 
 export default graphSlice.reducer;

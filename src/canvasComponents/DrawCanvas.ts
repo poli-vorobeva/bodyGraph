@@ -5,8 +5,10 @@ import {
   tDataForDraw,
   tGatePoints,
 } from "../functions/functions";
-import { PATH_WIDTH, tAvtiveGateDraw } from "./Canvas";
-import { COLORS, FONT_SIZE } from "./constants";
+import { tAvtiveGateDraw } from "./Canvas";
+import { COLORS, DRAW_GATES_STEPS, FONT_SIZE, PATH_WIDTH } from "./constants";
+
+const ids: number[] = [];
 
 export class DrawCanvas {
   ctx: CanvasRenderingContext2D;
@@ -17,6 +19,7 @@ export class DrawCanvas {
   activeGatesDataToDraw: tAvtiveGateDraw[];
   gatesCoordinates: Map<number, number[]>;
   activeGates: Set<number>;
+
   constructor(
     ctx: CanvasRenderingContext2D,
     width: number,
@@ -40,11 +43,18 @@ export class DrawCanvas {
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.drawPaths(isFisrtRender);
     this.drawBase();
-    this.drawLines(this.activeGatesDataToDraw, COLORS.YELLOW, COLORS.ORANGE, PATH_WIDTH.ACTIVE);
+    if (this.activeGates.size) {
+      if (ids.length) {
+        ids.forEach((id) => {
+          cancelAnimationFrame(id);
+        });
+      }
+      this.drawLines(this.activeGatesDataToDraw, COLORS.YELLOW, COLORS.ORANGE, PATH_WIDTH.ACTIVE);
+    }
   }
   private drawPaths(isFisrtRender: boolean) {
     if (isFisrtRender) {
-      const steps = 30;
+      const steps = DRAW_GATES_STEPS;
       const toAnimateData = this.gatePaths
         .map(([g1, g2]) => {
           const firstGate = this.gatesCoordinates.get(g1);
@@ -63,8 +73,8 @@ export class DrawCanvas {
           this.ctx.beginPath();
           this.ctx.strokeStyle = COLORS.GREY;
           this.ctx.lineWidth = PATH_WIDTH.REGULAR;
-          this.ctx.moveTo(+firstGate[0] + FONT_SIZE / 2, +firstGate[1] - FONT_SIZE / 2);
-          this.ctx.lineTo(+secondGate[0] + FONT_SIZE / 2, +secondGate[1] - FONT_SIZE / 2);
+          this.ctx.moveTo(firstGate[0] + FONT_SIZE / 2, firstGate[1] - FONT_SIZE / 2);
+          this.ctx.lineTo(secondGate[0] + FONT_SIZE / 2, secondGate[1] - FONT_SIZE / 2);
           this.ctx.stroke();
           this.ctx.closePath();
         }
@@ -86,7 +96,7 @@ export class DrawCanvas {
       let currentY = line.startY;
       const drawLineStep = () => {
         this.ctx.beginPath();
-        const grd = this.ctx.createLinearGradient(0, 0, 200, 0);
+        const grd = this.ctx.createLinearGradient(0, 200, 200, 0);
         grd.addColorStop(0, color1);
         grd.addColorStop(1, color2);
         this.ctx.strokeStyle = grd;
@@ -101,13 +111,15 @@ export class DrawCanvas {
           currentY = line.endY;
         }
         if (currentX !== line.endX || currentY !== line.endY) {
-          requestAnimationFrame(drawLineStep);
+          const id = requestAnimationFrame(drawLineStep);
+          ids.push(id);
         }
         this.ctx.lineTo(currentX, currentY);
         this.ctx.stroke();
         this.drawBase();
       };
-      requestAnimationFrame(drawLineStep);
+      const id = requestAnimationFrame(drawLineStep);
+      ids.push(id);
     }
   }
 }

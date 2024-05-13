@@ -14,8 +14,9 @@ export const CanvasElement = () => {
     if (canvasRef.current) {
       canvasRef.current.width = CANVAS_WIDTH;
       canvasRef.current.height = CANVAS_HEIGHT;
-      const canvas = new Canvas(canvasRef!.current, gatesRelations, gatePaths, activeGates);
-      canvas.init(renderCount.current <= 2);
+      const canvas = new Canvas(canvasRef.current, gatesRelations, gatePaths, activeGates);
+      canvas.init(renderCount.current <= 1);
+      renderCount.current += 1;
     }
   }, [activeGates]);
   return <canvas className={classes.canvas} ref={canvasRef} />;

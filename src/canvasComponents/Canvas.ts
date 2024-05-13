@@ -1,10 +1,8 @@
 import { getAnimatePathData, getDataForDraw, tDataForDraw } from "../functions/functions";
 import { drawData } from "./staticData";
 import { DrawCanvas } from "./DrawCanvas";
-export enum PATH_WIDTH {
-  ACTIVE = 3,
-  REGULAR = 1,
-}
+import { DRAW_GATES_STEPS } from "./constants";
+
 export type tAvtiveGateDraw = {
   startX: number;
   startY: number;
@@ -13,6 +11,7 @@ export type tAvtiveGateDraw = {
   stepX: number;
   stepY: number;
 };
+
 export class Canvas {
   private ctx: CanvasRenderingContext2D;
   private width: number;
@@ -73,7 +72,7 @@ export class Canvas {
   }
 
   private getActiveGatesDataToDraw() {
-    const step = 20;
+    const step = DRAW_GATES_STEPS;
     const drawCoordinates: tAvtiveGateDraw[] = [];
     this.activeGates.forEach((activeGate) => {
       const currentGate = this.gatesCoordinates.get(activeGate);
